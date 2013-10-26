@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <stdint.h>
 
 using namespace std;
 
@@ -14,8 +15,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	ofstream output_file ("output.txt");
 
 	const int degr = 10000;
-	vector <double> vectorD;
+	vector <int64_t> vectorD;
 	double x;
+	int64_t y;
 	int countEl, counter = -2;
 
 	while (input_file >> x)
@@ -24,17 +26,17 @@ int _tmain(int argc, _TCHAR* argv[])
 		if (counter == -1) countEl = x;
 		if (counter >= 0 && counter < countEl) 
 		{
-			x = floor(x * degr) * degr;
-			vectorD.push_back(x);
+			y = floor(x * degr) * degr;
+			vectorD.push_back(y);
 		}
 		if (counter >= countEl)
 		{
 			double num = x;
-			x = floor(x * degr) * degr;
+			y = floor(x * degr) * degr;
 			bool is_find = false;
-			for (vector <double>::const_iterator i = vectorD.begin(); i != vectorD.end(); ++i)
+			for (vector <int64_t>::const_iterator i = vectorD.begin(); i != vectorD.end(); ++i)
 			{
-				if (x == *i) 
+				if (y == *i) 
 				{
 					is_find = true;
 					output_file << "YES" << endl;

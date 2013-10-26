@@ -6,8 +6,16 @@
 #include <vector>
 #include <string>
 #include <cmath>
+//#include <utility>
 
 using namespace std;
+
+bool inMap(long i, long j , int sizeX, int sizeY)
+{
+	if ((i>=0) & (j>=0)) 
+		if ((i<sizeY) & (j<sizeX)) return true;
+	else return false;
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -27,9 +35,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		sizeY++;
 		vect_lines.push_back(line);	
 	}
-	sizeX+=2;
+	/*sizeX+=2;
 	sizeY+=2;
-
+	*/
 	char **map = new char*[sizeY];
 	for (int i = 0; i < sizeY; i++)
 		map[i] = new char[sizeX];
@@ -37,60 +45,80 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (int j = 0; j < sizeX; j++)
 			map[i][j] = '~';
 	
-	for (int i = 0; i< sizeY-2; i++)
+	vector<string> v;
+
+	for (int i = 0; i < sizeY; i++)
 	{
-		string line = *vect_lines.rbegin();
+		v.push_back(*vect_lines.rbegin());
 		vect_lines.pop_back();
-		for(int j = 0; j < sizeX-2; j++)
+	}
+
+	for (int i = 0; i< sizeY; i++)
+	{
+		string line = *v.rbegin();
+		v.pop_back();
+		for(int j = 0; j < sizeX; j++)
 			map[i][j] = line[j];
 	}
-	
-	for (int i = sizeY-1; i >= 0; i--)
-		for(int j = sizeX-1; j >= 0; j--)
-			map[i][j] = map[i][j-1];
-	
-	for (int i = sizeY-1; i > 0; i--)
-		for(int j = sizeX-1; j > 0; j--)
-			map[i][j] = map[i-1][j];
+
+	vector<pair <long , long>> bfs_coord;
+	long count_islands = 0;
 
 	for (int i = 0; i < sizeY; i++)
 	{
-		map[i][0] = '~';
-		map[i][sizeX] = '~';
-	}
-
-	for (int j = 0; j < sizeX; j++)
-	{
-		map[0][j] = '~';
-		map[sizeY-1][j] = '~';
-	}
-
-	int **num_map = new int*[sizeY];
-	for (int i = 0; i < sizeY; i++)
-		num_map[i] = new int[sizeX];
-	for (int i = 0; i < sizeY; i++)
 		for (int j = 0; j < sizeX; j++)
-			num_map[i][j] = 0;
-
-	int count_islands = 0;
-
-	for (int i = 1; i < sizeY-1; i++)
-		for(int j = 1; j < sizeX-1; j++)
 		{
-			if (map[i][j] =='o')
-				if ((num_map[i-1][j] > 0) || (num_map[i+1][j] > 0) || (num_map[i][j-1] > 0) || (num_map[i][j+1] > 0))
-					num_map[i][j] = max(max(num_map[i-1][j],num_map[i+1][j]),max(num_map[i][j-1],num_map[i][j+1]));
-				else 
-				{	
-					count_islands++;
-					num_map[i][j] = count_islands;
-				}	
+			if (map[i][j] == 'o')
+			{
+				map[i][j] = '~';
+				count_islands++;
+				pair<long, long> coord(i,j);
+				bfs_coord.push_back(coord);
+				vector<pair <long , long>>::iterator s = bfs_coord.begin();
+				vector<pair <long , long>>::iterator f = bfs_coord.end();
+				int p = 0;
+				while (s != f)
+				{
+					p++;
+					pair<long, long> c = *s;
+					if (inMap(c.first-1,c.second, sizeX, sizeY) && (map[c.first-1][c.second] == 'o'))
+					{
+						pair<long, long> newPair (c.first-1, c.second);
+						bfs_coord.push_back(newPair);
+						f = bfs_coord.end();
+						map[c.first-1][c.second] = '~';
+					}
+					if (inMap(c.first+1,c.second, sizeX, sizeY) && (map[c.first+1][c.second] == 'o'))
+					{
+						pair<long, long> newPair (c.first+1, c.second);
+						bfs_coord.push_back(newPair);
+						f = bfs_coord.end();
+						map[c.first+1][c.second] = '~';
+					}
+					if (inMap(c.first,c.second-1, sizeX, sizeY) && (map[c.first][c.second-1] == 'o'))
+					{
+						pair<long, long> newPair (c.first, c.second-1);
+						bfs_coord.push_back(newPair);
+						f = bfs_coord.end();
+						map[c.first][c.second-1] = '~';
+					}
+					if (inMap(c.first,c.second+1, sizeX, sizeY) && (map[c.first][c.second+1] == 'o'))
+					{
+						pair<long, long> newPair (c.first, c.second+1);
+						bfs_coord.push_back(newPair);
+						f = bfs_coord.end();
+						map[c.first][c.second+1] = '~';
+					}
+					s = bfs_coord.begin() + p;
+				}
+				bfs_coord.clear();
+			}
 		}
-	count_islands--;
+	}
+
 	output_file << count_islands;
 
     delete [] map;
-	delete [] num_map;
 	return 0;
 }
 

@@ -9,7 +9,6 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	setlocale(LC_ALL, "Russian");
 	ifstream input_file("input.txt", ios::in );
 	ofstream output_file ("output.txt");
 
@@ -17,6 +16,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	const string spec_symbols = " -\\";
 	int numLine = 0;
 
+	if (input_file)
 	while (!input_file.eof())
 	{
 		getline(input_file, line);
@@ -35,7 +35,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		string reverse_line = "";
 		for (int i = line.size()-1 ; i >= 0; i--)
 		{
-			if (line[i] >= 'À' && line[i] <= 'ß') 
+			if (line[i] >= 'A' && line[i] <= 'Z') 
 				line[i] += 32;
 			reverse_line += line[i];
 		}
@@ -49,6 +49,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		else first_line = line;
 	}
+	else output_file << "File not opened" << endl;
 
 	input_file.close();
 	output_file.close();
