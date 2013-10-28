@@ -1,14 +1,14 @@
-
+#include <stdint.h>
 #include <iostream>
 
 using namespace std;
 
 class Message
 {
-private:
-	unsigned int TYPE;
-	unsigned int TIME;
-	unsigned int LEN;
+public:
+	uint32_t TYPE;
+	uint32_t TIME;
+	uint32_t LEN;
 	char* MSG;
 
 public:

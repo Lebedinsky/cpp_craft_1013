@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "stdafx.h"
 #include "Message.h"
 
@@ -15,9 +16,9 @@ Message::~Message()
 
 istream &operator >> (istream &input, Message &mes)
 {
-	input.read((char*) &mes.TYPE, sizeof(unsigned int));
-	input.read((char*) &mes.TIME, sizeof(unsigned int));
-	input.read((char*) &mes.LEN, sizeof(unsigned int));
+	input.read((char*) &mes.TYPE, sizeof(uint32_t));
+	input.read((char*) &mes.TIME, sizeof(uint32_t));
+	input.read((char*) &mes.LEN, sizeof(uint32_t));
 	mes.MSG = new char[mes.LEN + 1];
 	input.read(mes.MSG, mes.LEN);
 	return input;
@@ -25,9 +26,9 @@ istream &operator >> (istream &input, Message &mes)
 
 ostream &operator << (ostream &output, Message &mes)
 {
-	output.write((char*) &mes.TYPE, sizeof(unsigned int));
-	output.write((char*) &mes.TIME, sizeof(unsigned int));
-	output.write((char*) &mes.LEN, sizeof(unsigned int));
+	output.write((char*) &mes.TYPE, sizeof(uint32_t));
+	output.write((char*) &mes.TIME, sizeof(uint32_t));
+	output.write((char*) &mes.LEN, sizeof(uint32_t));
 	output.write(mes.MSG, mes.LEN);
 	return output;
 }

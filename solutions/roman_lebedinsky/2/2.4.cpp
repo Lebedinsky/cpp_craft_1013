@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <fstream>
+#include <stdint.h>
 #include "Message.h"
 
 using namespace std;
@@ -13,8 +14,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	ifstream input_file ("input.txt", ios::binary);
 	ofstream output_file ("output.txt", ios::binary);
 
-	unsigned int maxTime =0;
-
+	uint32_t maxTime = 0;
 	if (input_file)
 	{
 		Message mes;
